@@ -15,6 +15,7 @@
 <%--suppress JspAbsolutePathInspection --%>
 <%--suppress HtmlUnknownTarget --%>
     <li><a href="/manager/html">admin`ка</a></li>
+    <li><a href="${pageContext.request.contextPath}/profile">Профиль</a></li>
 </ul>
 
 </body>

@@ -1,6 +1,8 @@
 package listeners;
 
+import common.JdbcDao;
 import common.ServletContextConst;
+import io.vavr.CheckedFunction0;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.logging.log4j.core.config.Order;
@@ -11,13 +13,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Scanner;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+import java.util.function.Supplier;
 
 @Order(2)
 @WebListener
@@ -31,22 +27,12 @@ public class DbListener implements ServletContextListener {
 
         assert dataSource != null: "Data source not found!";
 
-        try (val connection = dataSource.getConnection();
-             val statement = connection.createStatement()) {
-            statement.executeUpdate(getInitSql("/h2.sql"));
-        }
+        CheckedFunction0<Connection> getConnection = dataSource::getConnection;
+        Supplier<Connection> unchecked = getConnection.unchecked();
+        JdbcDao connectionConsumer = unchecked::get;
 
-        ServletContextConst.DBCP.accept(dataSource);
-    }
+        connectionConsumer.executeSql("/h2.sql");
 
-    @SneakyThrows
-    private String getInitSql(String name) {
-        try (val scanner = new Scanner(getClass().getResourceAsStream(name))
-                .useDelimiter(System.lineSeparator());
-             Stream<String> lines = StreamSupport.stream(
-                     Spliterators.spliteratorUnknownSize(scanner, Spliterator.ORDERED), false)) {
-
-            return lines.collect(Collectors.joining());
-        }
+        ServletContextConst.DBCP.accept(connectionConsumer);
     }
 }

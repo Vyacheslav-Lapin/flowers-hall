@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.sql.DataSource;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -17,7 +16,7 @@ import java.util.function.Supplier;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ServletContextConst<T> implements Supplier<T>, Consumer<T>, ServletContextListener {
 
-    public static final ServletContextConst<DataSource> DBCP =
+    public static final ServletContextConst<JdbcDao> DBCP =
             new ServletContextConst<>("dbcp");
     private static ServletContext SERVLET_CONTEXT;
     private final String name;

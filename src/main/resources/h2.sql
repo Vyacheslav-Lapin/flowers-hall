@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS Person (
   last_name  VARCHAR(255),
   --   professional BOOLEAN         DEFAULT FALSE,
   dob        DATE,
-  email      VARCHAR(255) NOT NULL,
+  email      VARCHAR(255) NOT NULL UNIQUE,
   password   VARCHAR(255) NOT NULL,
   address    VARCHAR(255),
   telephone  VARCHAR(15)
 );
 
-CREATE TABLE IF NOT EXISTS Roles (
+CREATE TABLE IF NOT EXISTS Role (
   id          INT PRIMARY KEY, --todo 18.11.2017: UUID from Java
   description VARCHAR(255),
   name        VARCHAR(80)
@@ -23,15 +23,15 @@ CREATE TABLE IF NOT EXISTS User (
   role_id INT,
 
   FOREIGN KEY (id) REFERENCES Person (id),
-  FOREIGN KEY (role_id) REFERENCES Roles (id)
+  FOREIGN KEY (role_id) REFERENCES Role (id)
 );
 
-INSERT INTO Roles (id, description, name) VALUES (1, '', 'Admin'); --1
-INSERT INTO Roles (id, description, name) VALUES (2, '', 'Moderator'); --2
-INSERT INTO Roles (id, description, name) VALUES (3, '', 'Gardener'); --3
-INSERT INTO Roles (id, description, name) VALUES (4, '', 'Consult'); --4
-INSERT INTO Roles (id, description, name) VALUES (5, '', 'Manager'); --5
-INSERT INTO Roles (id, description, name) VALUES (6, '', 'Sale'); --6
+INSERT INTO Role (id, description, name) VALUES (1, '', 'ADMIN'); --1
+INSERT INTO Role (id, description, name) VALUES (2, '', 'MODERATOR'); --2
+INSERT INTO Role (id, description, name) VALUES (3, '', 'GARDENER'); --3
+INSERT INTO Role (id, description, name) VALUES (4, '', 'CONSULT'); --4
+INSERT INTO Role (id, description, name) VALUES (5, '', 'MANAGER'); --5
+INSERT INTO Role (id, description, name) VALUES (6, '', 'SALE'); --6
 
 INSERT INTO Person (first_name, last_name, dob, email, password, address, telephone)
 VALUES ('Jose', 'Eglesias', '1980-06-15', 'Jose_Eglesias@mail.es', 'qwerty', 'Franco square, 5/1, 10',
